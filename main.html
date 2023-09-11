@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do List Application By KOU</title>
+    <link rel="stylesheet" type="text/css" href="stylemain.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="script.js"></script>
+    <style>
+        /* Gaya CSS untuk sidebar */
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #333;
+            padding-top: 20px;
+            color: white;
+        }
+
+        .sidebar a {
+            padding: 10px 15px;
+            text-decoration: none;
+            font-size: 18px;
+            color: white;
+            display: block;
+        }
+
+        .sidebar a:hover {
+            background-color: #555;
+        }
+
+        .content {
+            margin-left: 270px; /* Margin kiri untuk memberikan ruang untuk sidebar */
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="profile.html" class="user-avatar-container">
+            <div class="user-avatar">
+                <img src="https://cdn.icon-icons.com/icons2/2468/PNG/512/user_icon_149329.png" alt="User Avatar">
+                <div class="user-name">KOU</div>
+            </div>
+        </a>
+        <!-- Tambahkan tautan sidebar lainnya sesuai kebutuhan Anda -->
+        <a href="#"> </a>
+        <a href="#"> </a>
+        <a href="#"> </
+        <a href="main.html">Home</a>
+        <a href="tasklist.html">Tasks</a>
+        <a href="index.html">Log Out</a>
+    </div>
+
+    <!-- Konten Utama -->
+    <div class="content">
+        <h1>To-Do List</h1>
+        <div class="input-container">
+            <input type="text" id="taskInput" placeholder="Add new task...">
+            <button onclick="addTask()">Add</button>
+        </div>
+        <ul id="taskList"></ul>
+
+        <script>
+            // Mengambil data username dari local storage
+            var savedUsername = localStorage.getItem("loggedInUsername");
+            if (savedUsername) {
+                var userNameElement = document.querySelector(".user-name");
+                userNameElement.textContent = savedUsername;
+            }
+
+                // Mengambil data tugas dari Local Storage saat halaman dimuat
+                var tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+        
+                // Fungsi untuk menampilkan tugas ke dalam daftar tugas
+                function displayTasks() {
+                    var taskList = document.getElementById("taskList");
+                    taskList.innerHTML = "";
+        
+                    for (var i = 0; i < tasks.length; i++) {
+                        var task = tasks[i];
+                        var listItem = document.createElement("li");
+                        listItem.className = "task-item";
+        
+                        var taskText = document.createElement("span");
+                        taskText.className = "task-text";
+                        taskText.textContent = task;
+        
+                        var deleteButton = document.createElement("button");
+                        deleteButton.className = "task-delete";
+                        deleteButton.textContent = "Delete";
+                        deleteButton.onclick = function() {
+                            var index = tasks.indexOf(task);
+                            if (index !== -1) {
+                                tasks.splice(index, 1);
+                                displayTasks();
+                                saveTasksToLocalStorage();
+                            }
+                        };
+        
+                        listItem.appendChild(taskText);
+                        listItem.appendChild(deleteButton);
+                        taskList.appendChild(listItem);
+                    }
+                }
+        
+                // Fungsi untuk menambahkan tugas baru
+                function addTask() {
+                    var taskInput = document.getElementById("taskInput");
+                    var taskText = taskInput.value.trim();
+        
+                    if (taskText !== "") {
+                        tasks.push(taskText);
+                        taskInput.value = "";
+                        displayTasks();
+                        saveTasksToLocalStorage();
+                    }
+                }
+        
+                // Fungsi untuk menyimpan tugas ke dalam Local Storage
+                function saveTasksToLocalStorage() {
+                    localStorage.setItem("tasks", JSON.stringify(tasks));
+                }
+        
+                // Memanggil fungsi untuk menampilkan tugas saat halaman dimuat
+                displayTasks();
+        </script>
+    </div>
+</body>
+</html>
